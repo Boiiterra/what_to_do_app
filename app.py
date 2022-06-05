@@ -48,8 +48,8 @@ class WelcomePage(Frame):  # First page that users will see
         Frame.__init__(self, parent)
         self.controller = controller
 
-        self.switch_pages = Button(self, text="To MainPage", font=("Arial", 45), command=lambda: controller.show_frame(MainPage))
-        self.switch_pages.pack(fill='both', pady=2, expand=True)
+        switch_pages = Button(self, text="To MainPage", font=("Arial", 45), command=lambda: controller.show_frame(MainPage))
+        switch_pages.pack(fill='both', pady=2, expand=True)
 
 
 class MainPage(Frame):  # Main page + ability to scroll down
