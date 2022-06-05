@@ -12,7 +12,7 @@ class MainAppBody(Tk):  # App's body
         self.title(f"What To Do - {_version_}")
         if system().lower() == "windows": ...
             # self.iconbitmap("icon.ico")
-        self.geometry(f"{(self.winfo_screenwidth() // 2) + 500}x{(self.winfo_screenheight() // 2) + 200}")
+        self.geometry(f"800x600+{(self.winfo_screenwidth() - 800 ) // 2}+{(self.winfo_screenheight() - 600) // 2}")
         self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight() - 31)
         self.minsize(800, 600)
 
