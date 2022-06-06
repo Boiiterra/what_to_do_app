@@ -53,7 +53,7 @@ class WelcomePage(Frame):  # First page that users will see
         welcome_phrase = Label(self, text=welcome_text, font=("Times New Roman", 35))
         welcome_phrase.pack(side="top", fill="both", expand=True)
 
-        to_main_page_btn = Button(self, text="To MainPage", font=("Arial", 45), command=lambda: controller.show_frame(MainPage),
+        to_main_page_btn = Button(self, text="My plans", font=("Arial", 45), command=lambda: controller.show_frame(MainPage),
                               bd=0)
         to_main_page_btn.pack(fill='both', pady=2, expand=True)
 
