@@ -82,7 +82,14 @@ class MainPage(Frame):  # Main page + ability to scroll down
         canvas.create_window((0, 0), window=ui, anchor="nw")
 
 
-class SettingsPage(Frame): ...
+class SettingsPage(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent)
+        self.controller = controller
+
+        back_btn = Button(self, text="Back", font=("Arial", 35), bd=0, command=lambda: self.controller.show_frame(WelcomePage))
+        back_btn.pack(side="bottom", fill="both", expand=True)
 
 
 if __name__ == "__main__":
