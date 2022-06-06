@@ -30,11 +30,11 @@ class MainAppBody(Tk):  # App's body
             self.frames[frame] = current_frame
             current_frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(WelcomePage)
+        self.show_page(WelcomePage)
 
         self.bind("<Control-q>", lambda _: self.destroy())  # Quit app event
 
-    def show_frame(self, cont):
+    def show_page(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
 
@@ -53,11 +53,11 @@ class WelcomePage(Frame):  # First page that users will see
         welcome_phrase = Label(self, text=welcome_text, font=("Times New Roman", 35))
         welcome_phrase.pack(side="top", fill="both", expand=True)
 
-        to_main_page_btn = Button(self, text="My plans", font=("Arial", 45), command=lambda: controller.show_frame(MainPage),
+        to_main_page_btn = Button(self, text="My plans", font=("Arial", 45), command=lambda: controller.show_page(MainPage),
                               bd=0)
         to_main_page_btn.pack(fill='both', pady=2, expand=True)
 
-        to_settings_page_btn = Button(self, text="Settings", font=("Arial", 45), command=lambda: controller.show_frame(SettingsPage),
+        to_settings_page_btn = Button(self, text="Settings", font=("Arial", 45), command=lambda: controller.show_page(SettingsPage),
                               bd=0)
         to_settings_page_btn.pack(fill='both', pady=2, expand=True)
 
@@ -71,7 +71,7 @@ class MainPage(Frame):  # Main page + ability to scroll down
         top_container = Frame(self, )
         top_container.pack(side="top", fill="x", pady=4, padx=4)
 
-        home_btn = Button(top_container, text="Home", command=lambda: controller.show_frame(WelcomePage), font=("Arial", 25), bd=0.5)
+        home_btn = Button(top_container, text="Home", command=lambda: controller.show_page(WelcomePage), font=("Arial", 25), bd=0.5)
         home_btn.pack(side="left")
 
         canvas = Canvas(self)
@@ -94,7 +94,7 @@ class SettingsPage(Frame):
         Frame.__init__(self, parent)
         self.controller = controller
 
-        back_btn = Button(self, text="Back", font=("Arial", 35), bd=0, command=lambda: self.controller.show_frame(WelcomePage))
+        back_btn = Button(self, text="Back", font=("Arial", 35), bd=0, command=lambda: self.controller.show_page(WelcomePage))
         back_btn.pack(side="bottom", fill="both", expand=True)
 
 
