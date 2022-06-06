@@ -78,8 +78,7 @@ class MainPage(Frame):  # Main page + ability to scroll down
         canvas.config(yscrollcommand=scrollbar.set)
         canvas.bind("<Configure>", lambda _: canvas.config(scrollregion=canvas.bbox("all")))
 
-        user_interface = Frame(canvas)
-        ui = user_interface
+        ui = Frame(canvas) # User Interface
         canvas.create_window((0, 0), window=ui, anchor="nw")
 
 
