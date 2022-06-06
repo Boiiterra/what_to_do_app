@@ -65,7 +65,7 @@ class WelcomePage(Frame):  # First page that users will see
 class MainPage(Frame):  # Main page + ability to scroll down
 
     def __init__(self, parent, controller):
-        Frame.__init__(self, parent, bg="black")
+        Frame.__init__(self, parent)
         self.controller = controller
 
         canvas = Canvas(self)
