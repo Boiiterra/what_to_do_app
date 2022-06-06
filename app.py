@@ -68,6 +68,12 @@ class MainPage(Frame):  # Main page + ability to scroll down
         Frame.__init__(self, parent)
         self.controller = controller
 
+        top_container = Frame(self, )
+        top_container.pack(side="top", fill="x", pady=4, padx=4)
+
+        home_btn = Button(top_container, text="Home", command=lambda: controller.show_frame(WelcomePage), font=("Arial", 25), bd=0.5)
+        home_btn.pack(side="left")
+
         canvas = Canvas(self)
         canvas.pack(side="left", fill="both", expand=True)
 
