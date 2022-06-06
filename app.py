@@ -23,7 +23,7 @@ class MainAppBody(Tk):  # App's body
 
         self.frames = {}
 
-        frame_collection = (WelcomePage, MainPage)
+        frame_collection = (WelcomePage, MainPage, SettingsPage)
 
         for frame in frame_collection:
             current_frame = frame(container, self)
@@ -57,6 +57,10 @@ class WelcomePage(Frame):  # First page that users will see
                               bd=0)
         to_main_page_btn.pack(fill='both', pady=2, expand=True)
 
+        to_settings_page_btn = Button(self, text="To MainPage", font=("Arial", 45), command=lambda: controller.show_frame(SettingsPage),
+                              bd=0)
+        to_settings_page_btn.pack(fill='both', pady=2, expand=True)
+
 
 class MainPage(Frame):  # Main page + ability to scroll down
 
@@ -77,6 +81,9 @@ class MainPage(Frame):  # Main page + ability to scroll down
         user_interface = Frame(canvas)
         ui = user_interface
         canvas.create_window((0, 0), window=ui, anchor="nw")
+
+
+class SettingsPage(Frame): ...
 
 
 if __name__ == "__main__":
