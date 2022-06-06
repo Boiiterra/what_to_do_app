@@ -57,7 +57,7 @@ class WelcomePage(Frame):  # First page that users will see
                               bd=0)
         to_main_page_btn.pack(fill='both', pady=2, expand=True)
 
-        to_settings_page_btn = Button(self, text="To MainPage", font=("Arial", 45), command=lambda: controller.show_frame(SettingsPage),
+        to_settings_page_btn = Button(self, text="Settings", font=("Arial", 45), command=lambda: controller.show_frame(SettingsPage),
                               bd=0)
         to_settings_page_btn.pack(fill='both', pady=2, expand=True)
 
