@@ -48,6 +48,11 @@ class WelcomePage(Frame):  # First page that users will see
         Frame.__init__(self, parent)
         self.controller = controller
 
+        welcome_text = "Here you can store your plans."
+
+        welcome_phrase = Label(self, text=welcome_text, font=("Times New Roman", 35))
+        welcome_phrase.pack(side="top", fill="both", expand=True)
+
         switch_pages = Button(self, text="To MainPage", font=("Arial", 45), command=lambda: controller.show_frame(MainPage))
         switch_pages.pack(fill='both', pady=2, expand=True)
 
