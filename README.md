@@ -1,5 +1,8 @@
-# what_to_do_app
-My small experiment. This is application that will help schedule tasks (Similar to ToDo list). 
+# What to-do app
+
+This is application that will help schedule tasks.
 
 ## Info
-App itself maybe will be created using python and tkinter. 
+
+In development. :D
+Made with python and tkinter. Will try to use JSON as save file for tasks.
