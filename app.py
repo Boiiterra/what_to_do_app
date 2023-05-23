@@ -1,102 +1,85 @@
-from tkinter import Tk, Frame, Button, Scrollbar, Canvas, Label, Button
-from platform import system
+from tkinter import Tk, Frame, Button, Entry, Scrollbar, Canvas, Label
+
+WIDTH, HEIGHT = 850, 650
+FONT = ("Arial", 25)
 
 
-_version_ = "0.1"
+class AutoScrollbar(Scrollbar):
+    """Scrollbar that appears when needed"""
+
+    def set(self, low, high):
+        if float(low) <= 0.0 and float(high) >= 1.0:
+            self.pack_forget()
+        else:
+            self.pack(side="right", fill="y")
+        Scrollbar.set(self, low, high)
 
 
-class MainAppBody(Tk):  # App's body
+class Task(Frame):
+    def __init__(self, master, name):
+        Frame.__init__(self, master)
+
+        Label(self, font=FONT, text=name).pack()
+
+
+class App(Tk):
+    """Core of the application with page switch"""
 
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
-        self.title(f"What To Do - {_version_}")
-        if system().lower() == "windows": ...
-            # self.iconbitmap("icon.ico")
-        self.geometry(f"800x600+{(self.winfo_screenwidth() - 800 ) // 2}+{(self.winfo_screenheight() - 600) // 2}")
+        self.title("What to do?")
+
+        self.geometry(
+            f"{WIDTH}x{HEIGHT}"
+            f"+{int((self.winfo_screenwidth() - WIDTH) / 2)}+"
+            f"{int((self.winfo_screenheight() - HEIGHT) / 2)}"
+        )  # Middle pos on the screen
         self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight() - 31)
         self.minsize(800, 600)
+        self.resizable(0, 0)
 
-        container = Frame(self)
-        container.pack(side='top', fill='both', expand=True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        bottom = Frame(self, height=100, bg="#02d2d2")
+        bottom.pack(fill="both")
 
-        self.frames = {}
+        top = Frame(self)
+        top.pack(side="bottom", expand=True, fill="both")
+        self.top = top
 
-        frame_collection = (WelcomePage, MainPage, SettingsPage)
+        self.bind("<q>", lambda _: self.destroy())
 
-        for frame in frame_collection:
-            current_frame = frame(container, self)
-            self.frames[frame] = current_frame
-            current_frame.grid(row=0, column=0, sticky="nsew")
+        cnv = Canvas(top)
+        cnv.pack(side="left", fill="both", expand=True)
+        self.canvas = cnv
 
-        self.show_page(WelcomePage)
+        scrollbar = AutoScrollbar(top, orient="vertical", command=cnv.yview, width=20)
 
-        self.bind("<Control-q>", lambda _: self.destroy())  # Quit app event
+        cnv.config(yscrollcommand=scrollbar.set)
+        cnv.bind("<Configure>", lambda _: cnv.config(scrollregion=cnv.bbox("all")))
 
-    def show_page(self, cont):
-        frame = self.frames[cont]
-        frame.tkraise()
+        # Windows mouse wheel event
+        self.bind("<MouseWheel>", self.mouse_wheel)
+        # Linux mouse wheel event (Up)
+        self.bind("<Button-4>", self.mouse_wheel)
+        # Linux mouse wheel event (Down)
+        self.bind("<Button-5>", self.mouse_wheel)
 
-    def get_page(self, page_class):
-        return self.frames[page_class]
+    def mouse_wheel(self, event):
+        """Mouse wheel as scroll bar"""
+        direction = 0
+        # respond to Linux or Windows wheel event
+        if event.num == 5 or event.delta == -120:
+            direction = 1
+        if event.num == 4 or event.delta == 120:
+            direction = -1
+        if "AutoScrollbar" in str(self.top.pack_slaves()):
+            self.canvas.yview_scroll(direction, "units")
 
-
-class WelcomePage(Frame):  # First page that users will see
-
-    def __init__(self, parent, controller):
-        Frame.__init__(self, parent)
-        self.controller = controller
-
-        welcome_text = "Here you can store your plans."
-
-        welcome_phrase = Label(self, text=welcome_text, font=("Times New Roman", 35))
-        welcome_phrase.pack(side="top", fill="both", expand=True)
-
-        to_main_page_btn = Button(self, text="My plans", font=("Arial", 45), command=lambda: controller.show_page(MainPage),
-                              bd=0)
-        to_main_page_btn.pack(fill='both', pady=2, expand=True)
-
-        to_settings_page_btn = Button(self, text="Settings", font=("Arial", 45), command=lambda: controller.show_page(SettingsPage),
-                              bd=0)
-        to_settings_page_btn.pack(fill='both', pady=2, expand=True)
-
-
-class MainPage(Frame):  # Main page + ability to scroll down
-
-    def __init__(self, parent, controller):
-        Frame.__init__(self, parent)
-        self.controller = controller
-
-        top_container = Frame(self, )
-        top_container.pack(side="top", fill="x", pady=4, padx=4)
-
-        home_btn = Button(top_container, text="Home", command=lambda: controller.show_page(WelcomePage), font=("Arial", 25), bd=0.5)
-        home_btn.pack(side="left")
-
-        canvas = Canvas(self)
-        canvas.pack(side="left", fill="both", expand=True)
-
-        scrollbar = Scrollbar(self, orient="vertical", command=canvas.yview, width=20, bg="#898989", bd=1, troughcolor="#a9a9a9", elementborderwidth=2,
-                              activebackground="#696969", highlightthickness=0)
-        scrollbar.pack(side="right", fill="y")
-
-        canvas.config(yscrollcommand=scrollbar.set)
-        canvas.bind("<Configure>", lambda _: canvas.config(scrollregion=canvas.bbox("all")))
-
-        ui = Frame(canvas) # User Interface
-        canvas.create_window((0, 0), window=ui, anchor="nw")
-
-
-class SettingsPage(Frame):
-
-    def __init__(self, parent, controller):
-        Frame.__init__(self, parent)
-        self.controller = controller
-
-        back_btn = Button(self, text="Back", font=("Arial", 35), bd=0, command=lambda: self.controller.show_page(WelcomePage))
-        back_btn.pack(side="bottom", fill="both", expand=True)
+    def ch_page(self, new: Frame, prev: Frame = None):
+        """Change page from previous to new, if no previous switch to new"""
+        if prev is not None:
+            prev.pack_forget()
+        new(self).pack(fill="both", expand=True)
 
 
 if __name__ == "__main__":
-    MainAppBody().mainloop()
+    App().mainloop()
