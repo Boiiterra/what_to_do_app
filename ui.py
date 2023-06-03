@@ -86,39 +86,3 @@ class Help(Toplevel):
             bg=BG,
             activebackground=ABG,
         ).pack(side="bottom", ipady=5)
-
-
-class About(Toplevel):
-    def __init__(self, parent):
-        Toplevel.__init__(self, parent)
-
-        self.transient(parent)
-        self.wait_visibility()
-        self.grab_set()
-        self.geometry(
-            "313x254"
-            f"+{int((self.winfo_screenwidth() - 313) / 2)}"
-            f"+{int((self.winfo_screenheight() - 254) / 2)}"
-        )
-        self.resizable(0, 0)
-        self.title("About")
-
-        self.bind("<q>", lambda _: self.destroy())
-
-        self.config(bg=BG)
-
-        Label(self, text="About:", font=15, pady=5, bg=BG).pack()
-
-        bout = "This is a to-do application. You can use it to plan"
-
-        Label(self, text=bout, font=15, pady=5, bg=BG, wraplength=313).pack()
-
-        Button(
-            self,
-            text="OK",
-            font=15,
-            command=self.destroy,
-            width=7,
-            bg=BG,
-            activebackground=ABG,
-        ).pack(side="bottom", pady=10)

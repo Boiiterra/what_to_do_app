@@ -1,12 +1,14 @@
 """Main code of the application"""
 
-from tkinter import Tk, Frame
+from tkinter import Tk, Frame, Toplevel, Button, Label
 from importlib import reload
 
 import ui
 
 WIDTH, HEIGHT = 850, 650
 FONT = ("Arial", 25)
+ABG = "#d7d7d7"
+BG = "#c7c7c7"
 
 
 class App(Tk):
@@ -27,7 +29,7 @@ class App(Tk):
 
         self.bind("<q>", lambda _: self.destroy())
         self.bind("<F1>", lambda _: ui.Help(self))
-        self.bind("<F2>", lambda _: ui.About(self))
+        self.bind("<F2>", lambda _: About(self))
         self.bind("<F5>", lambda _: self.hotload())  # dev only! or repurpose
 
         self.ch_page(ui.MainPage)
@@ -60,6 +62,48 @@ class App(Tk):
         if prev is not None:
             prev.pack_forget()
         new(self).pack(fill="both", expand=True)
+
+
+class About(Toplevel):
+    def __init__(self, parent):
+        Toplevel.__init__(self, parent)
+
+        self.transient(parent)
+        self.wait_visibility()
+        self.grab_set()
+        self.geometry(
+            "313x254"
+            f"+{int((self.winfo_screenwidth() - 313) / 2)}"
+            f"+{int((self.winfo_screenheight() - 254) / 2)}"
+        )
+        self.resizable(0, 0)
+        self.title("About")
+
+        self.bind("<q>", lambda _: self.destroy())
+
+        self.config(bg=BG)
+
+        Label(self, text="About:", font=15, pady=5, bg=BG).pack()
+
+        bout = (
+            "This is a to-do application.\n"
+            "You can use it to plan something.\n"
+            "Has basic features of to-do app.\n"
+            "Designed to be used on Linux but supports other OSs.\n\n"
+            "Made by Boiiterra for Boiiterra.\nYou can use it too. :D"
+        )
+
+        Label(self, text=bout, font=15, pady=5, bg=BG, wraplength=313).pack()
+
+        Button(
+            self,
+            text="OK",
+            font=15,
+            command=self.destroy,
+            width=7,
+            bg=BG,
+            activebackground=ABG,
+        ).pack(side="bottom", pady=10)
 
 
 if __name__ == "__main__":
