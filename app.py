@@ -1,25 +1,12 @@
-from tkinter import Tk, Frame, Button, Entry, Scrollbar, Canvas, Label
+"""Main code of the application"""
+
+from tkinter import Tk, Frame
+from importlib import reload
+
+import ui
 
 WIDTH, HEIGHT = 850, 650
 FONT = ("Arial", 25)
-
-
-class AutoScrollbar(Scrollbar):
-    """Scrollbar that appears when needed"""
-
-    def set(self, low, high):
-        if float(low) <= 0.0 and float(high) >= 1.0:
-            self.pack_forget()
-        else:
-            self.pack(side="right", fill="y")
-        Scrollbar.set(self, low, high)
-
-
-class Task(Frame):
-    def __init__(self, master, name):
-        Frame.__init__(self, master)
-
-        Label(self, font=FONT, text=name).pack()
 
 
 class App(Tk):
@@ -38,23 +25,12 @@ class App(Tk):
         self.minsize(800, 600)
         self.resizable(0, 0)
 
-        bottom = Frame(self, height=100, bg="#02d2d2")
-        bottom.pack(fill="both")
-
-        top = Frame(self)
-        top.pack(side="bottom", expand=True, fill="both")
-        self.top = top
-
         self.bind("<q>", lambda _: self.destroy())
+        self.bind("<F1>", lambda _: ui.Help(self))
+        self.bind("<F2>", lambda _: ui.About(self))
+        self.bind("<F5>", lambda _: self.hotload())  # dev only! or repurpose
 
-        cnv = Canvas(top)
-        cnv.pack(side="left", fill="both", expand=True)
-        self.canvas = cnv
-
-        scrollbar = AutoScrollbar(top, orient="vertical", command=cnv.yview, width=20)
-
-        cnv.config(yscrollcommand=scrollbar.set)
-        cnv.bind("<Configure>", lambda _: cnv.config(scrollregion=cnv.bbox("all")))
+        self.ch_page(ui.MainPage)
 
         # Windows mouse wheel event
         self.bind("<MouseWheel>", self.mouse_wheel)
@@ -62,6 +38,11 @@ class App(Tk):
         self.bind("<Button-4>", self.mouse_wheel)
         # Linux mouse wheel event (Down)
         self.bind("<Button-5>", self.mouse_wheel)
+
+    def hotload(self):
+        """Usesed to live test changes"""
+        reload(ui)
+        self.ch_page(ui.MainPage, self.pack_slaves()[0])
 
     def mouse_wheel(self, event):
         """Mouse wheel as scroll bar"""
