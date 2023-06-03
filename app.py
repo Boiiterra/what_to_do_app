@@ -28,7 +28,7 @@ class App(Tk):
         self.resizable(0, 0)
 
         self.bind("<q>", lambda _: self.destroy())
-        self.bind("<F1>", lambda _: ui.Help(self))
+        self.bind("<F1>", lambda _: Help(self))
         self.bind("<F2>", lambda _: About(self))
         self.bind("<F5>", lambda _: self.hotload())  # dev only! or repurpose
 
@@ -62,6 +62,46 @@ class App(Tk):
         if prev is not None:
             prev.pack_forget()
         new(self).pack(fill="both", expand=True)
+
+
+class Help(Toplevel):
+    def __init__(self, parent):
+        Toplevel.__init__(self, parent)
+        self.title("Help")
+        self.transient(parent)
+        self.geometry(
+            "335x260"
+            f"+{int((self.winfo_screenwidth() - 335) / 2)}"
+            f"+{int((self.winfo_screenheight() - 260) / 2)}"
+        )
+        self.wait_visibility()
+        self.grab_set()
+
+        self.bind("<q>", lambda _: self.destroy())
+
+        self.config(bg=BG)
+
+        Label(self, font=15, text="Help:", bg=BG).pack(pady=(5, 0))
+
+        help_txt = (
+            "- Press Q to close application.\n"
+            "- Press F1 to 'call for help'.\n"
+            "- Press F2 to learn about app.\n\n"
+            "- Click on '+ New task' to start.\n"
+            "- Click on '' to complete task.\n"
+            "- Click on '' to remove task."
+        )
+
+        Label(self, font=15, text=help_txt, bg=BG).pack(pady=15)
+
+        Button(
+            self,
+            font=15,
+            command=self.destroy,
+            text="OK",
+            bg=BG,
+            activebackground=ABG,
+        ).pack(side="bottom", ipady=5)
 
 
 class About(Toplevel):
