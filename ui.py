@@ -43,19 +43,13 @@ class NewTask(Toplevel):
             self.destroy()
 
         def add():
-            _number = number.get()
-            _letter = letter.get().upper()
-            if _number != "" and _letter != "":
-                number.delete(0, "end")
-                letter.delete(0, "end")
+            _name = tname.get()
+            _descr = tdescr.get()
+            if _name != "" and _descr != "":
+                tname.delete(0, "end")
+                tdescr.delete(0, "end")
             else:
-                if _number == "" and _letter == "":
-                    message = "Oh no!"
-                elif _number == "":
-                    message = "Hehe it werks"
-                else:
-                    message = "That is broken"
-                showinfo("Data is missing", message)
+                showinfo("Data is missing", "error")
 
         Label(view, text="Add new task", font=15).pack()
 
@@ -63,10 +57,10 @@ class NewTask(Toplevel):
         class_cont.pack(pady=10)
 
         Label(class_cont, text="New task:", font=15).grid(row=0, column=0)
-        number = Entry(class_cont, width=2, font=15)
-        number.grid(row=0, column=1)  # Number
-        letter = Entry(class_cont, width=2, font=15)
-        letter.grid(row=0, column=2)  # Letter
+        tname = Entry(class_cont, width=2, font=15)
+        tname.grid(row=0, column=1)  # Number
+        tdescr = Entry(class_cont, width=2, font=15)
+        tdescr.grid(row=0, column=2)  # Letter
 
         btn_cont = Frame(view)
         btn_cont.pack(side="bottom", pady=5)
@@ -122,12 +116,10 @@ class MainPage(Frame):
 
         parent.bind("<i>", lambda _: NewTask(parent, None))
 
-        scrollbar = AutoScrollbar(
-            top, orient="vertical", command=cnv.yview, width=20)
+        scrollbar = AutoScrollbar(top, orient="vertical", command=cnv.yview, width=20)
 
         cnv.config(yscrollcommand=scrollbar.set)
-        cnv.bind("<Configure>", lambda _: cnv.config(
-            scrollregion=cnv.bbox("all")))
+        cnv.bind("<Configure>", lambda _: cnv.config(scrollregion=cnv.bbox("all")))
 
         parent.canvas = cnv
         parent.top = top
