@@ -31,6 +31,7 @@ class App(Tk):
         self.bind("<F1>", lambda _: Help(self))
         self.bind("<F2>", lambda _: About(self))
         self.bind("<F5>", lambda _: self.hotload())  # dev only! or repurpose
+        self.bind("<r>", lambda _: self.hotload())  # dev only! or repurpose
 
         self.ch_page(ui.MainPage)
 
