@@ -1,6 +1,6 @@
 """This file is made for hot reloading in order to test changes in UI/UX"""
 
-from tkinter import Scrollbar, Frame, Label, Toplevel, Button, Canvas, Entry
+from tkinter import Scrollbar, Frame, Label, Toplevel, Button, Canvas, Entry, Text
 from tkinter.messagebox import showinfo
 
 FONT = ("Arial", 20)
@@ -29,10 +29,12 @@ class NewTask(Toplevel):
         view = Frame(self)
         view.pack(pady=10, padx=10, fill="both", expand=True)
         self.title("Add task")
+        h = 290
+        w = 360
         self.geometry(
-            "320x250"
-            f"+{(self.winfo_screenwidth() - 320) // 2}"
-            f"+{(self.winfo_screenheight() - 250) // 2}"
+            f"{w}x{h}"
+            f"+{(self.winfo_screenwidth() - w) // 2}"
+            f"+{(self.winfo_screenheight() - h) // 2}"
         )
         self.resizable(0, 0)
         self.transient(parent)
@@ -44,23 +46,24 @@ class NewTask(Toplevel):
 
         def add():
             _name = tname.get()
-            _descr = tdescr.get()
+            _descr = tdescr.get(0.0, "end")
             if _name != "" and _descr != "":
                 tname.delete(0, "end")
-                tdescr.delete(0, "end")
+                tdescr.delete(0.0, "end")
             else:
-                showinfo("Data is missing", "error")
+                showinfo(
+                    "Data is missing",
+                    "Error: Not enough data entered.\n"
+                    "Please fill all empty boxes with some text.",
+                )
 
-        Label(view, text="Add new task", font=15).pack()
+        Label(view, text="Task's name:", font=15).pack(pady=5)
+        tname = Entry(view, width=40, font=15)
+        tname.pack()
 
-        class_cont = Frame(view)
-        class_cont.pack(pady=10)
-
-        Label(class_cont, text="New task:", font=15).grid(row=0, column=0)
-        tname = Entry(class_cont, width=2, font=15)
-        tname.grid(row=0, column=1)  # Number
-        tdescr = Entry(class_cont, width=2, font=15)
-        tdescr.grid(row=0, column=2)  # Letter
+        Label(view, text="Description:", font=15).pack(pady=(10, 5))
+        tdescr = Text(view, width=45, height=6, font=15)
+        tdescr.pack()
 
         btn_cont = Frame(view)
         btn_cont.pack(side="bottom", pady=5)
